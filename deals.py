@@ -149,7 +149,24 @@ if selected_name != "Select a name":
         
         st.write("")
         st.write("")
-                
+         #--------------- PHASE 5: VISUALIZATION ------------------
+        st.subheader("Performance Visuals")
+        
+        fig, ax = plt.subplots()
+        ax.hist(df['amount'], color='firebrick', edgecolor="white")
+        ax.set_title(f"Distribution of {selected_name}'s Sales Amount", color="white")
+      
+        ax.tick_params(axis="x", colors="white")
+        ax.tick_params(axis="y", colors="white")
+        
+        # Transparent background
+        fig.patch.set_alpha(0.0)
+        ax.patch.set_alpha(0.0)
+        
+        st.pyplot(fig)
+        
+        st.write("")
+        
         # --------- TOP 5 PRODUCT BY WINRATE ----------
         product_winrate = (
             df.groupby("product")["status"]
@@ -180,3 +197,4 @@ if selected_name != "Select a name":
 else:
     st.warning("Please select a valid name to continue.")
         
+
