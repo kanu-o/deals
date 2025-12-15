@@ -150,46 +150,33 @@ if selected_name != "Select a name":
         st.write("")
         st.write("")
                 
-        #--------------- PHASE 5: VISUALIZATION ------------------
-        st.subheader("Performance Visuals")
+        # --------- TOP 5 PRODUCT BY WINRATE ----------
+        product_winrate = (
+            df.groupby("product")["status"]
+              .apply(lambda x: (x == "Won").mean() * 100)
+              .round(2)
+        )
         
-        fig, ax = plt.subplots()
+        top_5_product_winrate = product_winrate.sort_values(ascending=False).head(5)
+
+        fig,ax = plt.subplots()
+        bars = ax.bar(top_5_product_winrate.index, top_5_product_winrate.values,
+                      color='blue', edgecolor="white")
+        ax.bar_label(
+            bars,
+            labels=[f"{v:.1f}%" for v in top_5_product_winrate.values],
+            color="white")
+
+        ax.set_title("Top 5 Product's by Win Rate%.", color="white")
+        ax.set_xticklabels(top_5_product_winrate.index, rotation=45, ha="right")
+
         
-        # Histogram
-        ax.hist(df['amount'], color='firebrick', edgecolor='white')
-        
-        ax.set_title(f"Distribution of {selected_name}'s Sales Amount", color="white")
-        
-        # Set tick colors
         ax.tick_params(axis="x", colors="white")
         ax.tick_params(axis="y", colors="white")
         
-        # Transparent backgrounds
         fig.patch.set_alpha(0.0)
         ax.patch.set_alpha(0.0)
-        
-        # Display in Streamlit
         st.pyplot(fig)
-        
-        st.write("")
-        
-        fig, ax = plt.subplots()
-        
-        # Histogram
-        bars = ax.bar(top_5_product_winrate.index, top_5_product_winrate.values, color='blue', edgecolor="white")
-        ax.bar_label(bars, labels = top_5_product_winrate.values, color="white")
-        ax.set_title("Top 5 Products by Win Rate%.", color="white")
-        ax.set_xticks([])
-        ax.set_yticks([])
-        
-        # Set tick colors
-        ax.tick_params(axis="x", colors="white")
-        ax.tick_params(axis="y", colors="white")
-        
-        # Transparent backgrounds
-        fig.patch.set_alpha(0.0)
-        ax.patch.set_alpha(0.0)
-        
-        # Display in Streamlit
-        st.pyplot(fig)
+else:
+    st.warning("Please select a valid name to continue.")
         
